@@ -20,6 +20,6 @@ stdenv.mkDerivation {
     description = "#SAT solver based on modern DPLL based SAT solver technology";
     homepage = "https://github.com/SoftVarE-Group/sharpSAT";
     license = licenses.mit;
-    platforms = platforms.unix ++ platforms.windows;
+    platforms = platforms.unix;
   };
 }

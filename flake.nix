@@ -29,7 +29,6 @@
 
           sharpSAT = sharpSAT pkgs;
           sharpSAT-static = sharpSAT pkgs.pkgsStatic;
-          sharpSAT-windows = sharpSAT pkgs.pkgsCross.mingwW64;
 
           container = pkgs.dockerTools.buildLayeredImage {
             name = "sharpSAT";
