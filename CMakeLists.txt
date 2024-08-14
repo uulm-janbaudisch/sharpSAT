@@ -1,29 +1,41 @@
-cmake_minimum_required (VERSION 2.8)
-project (SHARPSAT) 
+cmake_minimum_required(VERSION 3.27)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall")
+project(SHARPSAT VERSION 13.02)
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O3 -DNDEBUG -Wall")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-set(CMAKE_CXX_FLAGS_PROFILING "${CMAKE_CXX_FLAGS_PROFILING} -std=c++11 -O3 -g -DNDEBUG -Wall")
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 
-IF(UNIX)
-  IF(APPLE)
-    include_directories(/opt/local/include)
-  ELSE(APPLE)
-    
-    
-  ENDIF(APPLE)
-ELSE(UNIX)
+option(BUILD_SHARED_LIBS "Link to shared libraries." ON)
 
-ENDIF(UNIX)
+if(NOT BUILD_SHARED_LIBS)
+    set(GMP_USE_STATIC_LIBS ON)
+endif()
 
+find_package(GMP REQUIRED)
 
-find_library(GMP_LIB gmp)
-find_library(GMPXX_LIB gmpxx)
+add_library(component_types OBJECT
+    src/component_types/base_packed_component.cpp
+    src/component_types/component_archetype.cpp
+)
 
+add_library(libsharpSAT STATIC
+    $<TARGET_OBJECTS:component_types>
+    src/alt_component_analyzer.cpp
+    src/component_analyzer.cpp
+    src/component_cache.cpp
+    src/component_management.cpp
+    src/instance.cpp
+    src/new_component_analyzer.cpp
+    src/solver.cpp
+    src/statistics.cpp
+)
 
-add_subdirectory(src)
+target_link_libraries(libsharpSAT GMP::GMPXX GMP::GMP)
 
-add_executable (sharpSAT src/main.cpp)
-target_link_libraries (sharpSAT libsharpSAT ${GMP_LIB} ${GMPXX_LIB}) 
+add_executable(sharpSAT src/main.cpp)
+target_link_libraries(sharpSAT libsharpSAT)
+
+install(TARGETS sharpSAT)
