@@ -1,6 +1,4 @@
-=========
-sharpSAT
-=========
+# sharpSAT
 
 sharpSAT is a #SAT solver based on modern DPLL based SAT solver technology.
 This is a new version with several incremental improvements over the 2006
@@ -9,10 +7,9 @@ sharpSAT 1.1 which has been published at SAT 2006.
 This version also fixed several bugs - most importantly a counting bug,
 that causes sharpSAT to report wrong model counts on some instances.
 
-=========
-Usage
-=========
+## Usage
 
+```
 Usage: sharpSAT [options] [CNF_File]
 Options: 
 	-noPP	turn off preprocessing
@@ -21,31 +18,31 @@ Options:
 	-q      quiet mode
 	-t [s] 	set time bound to s seconds
 	-cs [n]	set max cache size to n MB
+```
 
+## Building
 
-=========
-Building
-=========
+### Prerequisites
 
-It suffices to change to the ./Release subdirectory and run
+- [CMake][cmake]
+- [GMP][gmp] (with C++ bindings)
 
-make
+This is a CMake project.
+To configure a build in the `build` directory (will be created), run:
 
+```
+cmake -B build
+```
 
-NOTE:
+After configuring, build the project with:
 
-- it is necessary to have at least G++ 4.7 installed for sharpSAT to
-compile. This is particularly necessary as we use delegating constructors 
+```
+cmake --build build
+```
 
-- the GMP bignum package has to be installed in your system
+## Changes
 
-
-
-=========
- Changes 
-=========
-
-> 12.08 <
+> 12.08
 
 - rewrote most of the codebase of the solver, including a redesigned SAT solver
 foundation based on more recent developments such as MiniSAT and TiniSAT,
@@ -80,8 +77,7 @@ original overhead
 available at program start. This can be overridden, however, by setting the
 maximum cache size using the "-cs" option
 
-
-BUGFIXES
+### BUGFIXES
 
 - corrected a bug in the use of the GMP bignumber package that caused (among others)
 wrong solution counts reported on bmc-ibm-5, bmc-ibm-10, ra, rb, and rc.
@@ -90,3 +86,6 @@ wrong solution counts reported on bmc-ibm-5, bmc-ibm-10, ra, rb, and rc.
 larger than GB
 
 - several out-of-memory problems with the old sharpSAT have been resolved
+
+[cmake]: https://cmake.org
+[gmp]: https://gmplib.org
