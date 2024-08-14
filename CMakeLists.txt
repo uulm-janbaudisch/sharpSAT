@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 
+add_compile_options(-Wno-error=narrowing)
+
 option(BUILD_SHARED_LIBS "Link to shared libraries." ON)
 
 if(NOT BUILD_SHARED_LIBS)
