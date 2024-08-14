@@ -11,21 +11,18 @@ jobs:
       matrix:
         target:
           - double: aarch64-linux    # target we are building for
-            system: aarch64-linux    # host system the build is running on
-            runner: ubuntu-24.04    # GitHub runner the build is running on
+            runner: ubuntu-24.04     # GitHub runner the build is running on
             flake: 'sharpSAT-static' # flake part to build
           - double: x86_64-linux
-            system: x86_64-linux
             runner: ubuntu-24.04
             flake: 'sharpSAT-static'
-          - double: aarch64-darwin
-            system: aarch64-darwin
-            runner: macos-latest
-            flake: 'sharpSAT'
-          - double: x86_64-darwin
-            system: x86_64-darwin
-            runner: macos-13
-            flake: 'sharpSAT'
+# FIXME: darwin builds fail with a linking error
+#          - double: aarch64-darwin
+#            runner: macos-latest
+#            flake: 'sharpSAT'
+#          - double: x86_64-darwin
+#            runner: macos-13
+#            flake: 'sharpSAT'
     runs-on: ${{ matrix.target.runner }}
     steps:
       - name: Checkout
@@ -37,7 +34,7 @@ jobs:
       - name: Nix
         uses: DeterminateSystems/nix-installer-action@v10
         with:
-          extra-conf: system = ${{ matrix.target.system }}
+          extra-conf: system = ${{ matrix.target.double }}
       - name: Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
       - name: Build
