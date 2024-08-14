@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  Build:
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - double: aarch64-linux    # target we are building for
+            system: aarch64-linux    # host system the build is running on
+            runner: ubuntu-latest    # GitHub runner the build is running on
+            flake: 'sharpSAT-static' # flake part to build
+          - double: x86_64-linux
+            system: x86_64-linux
+            runner: ubuntu-latest
+            flake: 'sharpSAT-static'
+          - double: aarch64-darwin
+            system: aarch64-darwin
+            runner: macos-latest
+            flake: 'sharpSAT'
+          - double: x86_64-darwin
+            system: x86_64-darwin
+            runner: macos-13
+            flake: 'sharpSAT'
+          - double: x86_64-windows
+            system: x86_64-linux
+            runner: ubuntu-latest
+            flake: 'sharpSAT-windows'
+    runs-on: ${{ matrix.target.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # aarch64-linux builds are emulated on x86_64-linux.
+      - name: QEMU
+        if: ${{ matrix.target.double == 'aarch64-linux' }}
+        run: sudo apt-get install -y qemu-user-static
+      - name: Nix
+        uses: DeterminateSystems/nix-installer-action@v10
+        with:
+          extra-conf: system = ${{ matrix.target.system }}
+      - name: Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v4
+      - name: Build
+        run: nix build -L .#${{ matrix.target.flake }}
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharpSAT-${{ matrix.target.double }}
+          path: result
