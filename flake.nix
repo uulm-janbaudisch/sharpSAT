@@ -1,7 +1,7 @@
 {
   description = "#SAT solver based on modern DPLL based SAT solver technology";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
 
   outputs =
     { self, nixpkgs, ... }:
@@ -37,7 +37,8 @@
               Entrypoint = [ "/bin/sharpSAT" ];
               Labels = {
                 "org.opencontainers.image.source" = "https://github.com/SoftVarE-Group/sharpSAT";
-                "org.opencontainers.image.description" = "#SAT solver based on modern DPLL based SAT solver technology";
+                "org.opencontainers.image.description" =
+                  "#SAT solver based on modern DPLL based SAT solver technology";
                 "org.opencontainers.image.licenses" = "MIT";
               };
             };
