@@ -10,33 +10,25 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - double: aarch64-linux    # target we are building for
-            runner: ubuntu-24.04     # GitHub runner the build is running on
-            flake: 'sharpSAT-static' # flake part to build
+          - double: aarch64-linux
+            runner: ubuntu-24.04-arm
+            flake: sharpSAT-static
           - double: x86_64-linux
             runner: ubuntu-24.04
-            flake: 'sharpSAT-static'
+            flake: sharpSAT-static
 # FIXME: darwin builds fail with a linking error
 #          - double: aarch64-darwin
-#            runner: macos-latest
-#            flake: 'sharpSAT'
+#            runner: macos-15
+#            flake: sharpSAT
 #          - double: x86_64-darwin
 #            runner: macos-13
-#            flake: 'sharpSAT'
+#            flake: sharpSAT
     runs-on: ${{ matrix.target.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # aarch64-linux builds are emulated on x86_64-linux.
-      - name: QEMU
-        if: ${{ matrix.target.double == 'aarch64-linux' }}
-        run: sudo apt-get install -y qemu-user-static
       - name: Nix
-        uses: DeterminateSystems/nix-installer-action@v16
-        with:
-          extra-conf: system = ${{ matrix.target.double }}
-      - name: Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v8
+        uses: cachix/install-nix-action@v30
       - name: Build
         run: nix build -L .#${{ matrix.target.flake }}
       - name: Upload
