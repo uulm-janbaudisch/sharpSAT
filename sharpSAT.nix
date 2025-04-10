@@ -7,7 +7,7 @@
 }:
 stdenv.mkDerivation {
   pname = "sharpSAT";
-  version = "13.02";
+  version = "13.03";
 
   src = ./.;
 
