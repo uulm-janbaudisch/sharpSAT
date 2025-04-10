@@ -16,13 +16,12 @@ jobs:
           - double: x86_64-linux
             runner: ubuntu-24.04
             flake: sharpSAT-static
-# FIXME: darwin builds fail with a linking error
-#          - double: aarch64-darwin
-#            runner: macos-15
-#            flake: sharpSAT
-#          - double: x86_64-darwin
-#            runner: macos-13
-#            flake: sharpSAT
+          - double: aarch64-darwin
+            runner: macos-15
+            flake: sharpSAT-static
+          - double: x86_64-darwin
+            runner: macos-13
+            flake: sharpSAT-static
     runs-on: ${{ matrix.target.runner }}
     steps:
       - name: Checkout
